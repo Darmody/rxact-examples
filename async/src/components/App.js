@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import stream from '../streams/posts'
+import postStream from '../streams/post'
 import Picker from './Picker'
 import Posts from './Posts'
 
@@ -13,7 +13,13 @@ class App extends Component {
   }
 
   componentDidMount() {
-    stream.fetchPostsIfNeeded()
+    this.fetchPostsSubscription = postStream.fetchPostsIfNeeded().subscribe()
+  }
+
+  componentWillUnMount() {
+    if (this.fetchPostsSubscription) {
+      this.fetchPostsSubscription.unsubscribe()
+    }
   }
 
   render() {
@@ -23,7 +29,7 @@ class App extends Component {
       <div>
         <Picker
           value={selectedReddit}
-          onChange={stream.updateReddit}
+          onChange={postStream.updateReddit}
           options={['reactjs', 'frontend']}
         />
         <p>
@@ -34,7 +40,7 @@ class App extends Component {
             </span>
           }
           {!isFetching &&
-            <button onClick={stream.fetchPosts}>
+            <button onClick={postStream.fetchPosts}>
               Refresh
             </button>
           }
@@ -50,7 +56,7 @@ class App extends Component {
   }
 }
 
-export default stream.connect(state => ({
+export default postStream.observer(state => ({
   selectedReddit: state.reddit,
   posts: state.items[state.reddit] || [],
   isFetching: state.isFetching,

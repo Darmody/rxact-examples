@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import counter from './stateStream'
+import counterStream from '../streams/counter'
 
 class Counter extends Component {
   render() {
@@ -9,19 +9,19 @@ class Counter extends Component {
       <p>
         Clicked: {value} times
         {' '}
-        <button onClick={counter.increment}>
+        <button onClick={counterStream.increment}>
           +
         </button>
         {' '}
-        <button onClick={counter.decrement}>
+        <button onClick={counterStream.decrement}>
           -
         </button>
         {' '}
-        <button onClick={counter.incrementIfOdd}>
+        <button onClick={counterStream.incrementIfOdd}>
           Increment if odd
         </button>
         {' '}
-        <button onClick={counter.incrementAsync}>
+        <button onClick={counterStream.incrementAsync}>
           Increment async
         </button>
       </p>
@@ -33,6 +33,6 @@ Counter.propTypes = {
   value: PropTypes.number.isRequired,
 }
 
-export default counter.connect(
+export default counterStream.observer(
   (state => ({ value: state })),
 )(Counter)

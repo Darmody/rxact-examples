@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+react-scripts build
+mv build/index.html index.html

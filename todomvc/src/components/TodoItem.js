@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import stream from '../streams/todos'
+import todoStream from '../streams/todo'
 import TodoTextInput from './TodoTextInput'
 
 export default class TodoItem extends Component {
@@ -19,9 +19,9 @@ export default class TodoItem extends Component {
 
   handleSave = (id, text) => {
     if (text.length === 0) {
-      stream.delete(id)
+      todoStream.delete(id)
     } else {
-      stream.edit(id, text)
+      todoStream.edit(id, text)
     }
     this.setState({ editing: false })
   }
@@ -43,13 +43,13 @@ export default class TodoItem extends Component {
           <input className="toggle"
             type="checkbox"
             checked={todo.completed}
-            onChange={() => stream.complete(todo.id)}
+            onChange={() => todoStream.complete(todo.id)}
           />
           <label onDoubleClick={this.handleDoubleClick}>
             {todo.text}
           </label>
           <button className="destroy"
-            onClick={() => stream.delete(todo.id)}
+            onClick={() => todoStream.delete(todo.id)}
           />
         </div>
       )
