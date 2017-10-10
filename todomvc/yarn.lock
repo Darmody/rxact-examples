@@ -5509,9 +5509,9 @@ rx-lite@*, rx-lite@^4.0.8:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/rx-lite/-/rx-lite-4.0.8.tgz#0b1e11af8bc44836f04a6407e92da42467b79444"
 
-rxact@^0.6.1:
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/rxact/-/rxact-0.6.1.tgz#15b4cb2bdab8f7bae88778786024a0f071df77bb"
+rxact@^0.7.1:
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/rxact/-/rxact-0.7.1.tgz#6f254625bff2c3ac5bd6b61fcbf6dbe5ebe7385e"
   dependencies:
     hoist-non-react-statics "^2.3.1"
 
