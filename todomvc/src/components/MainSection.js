@@ -80,7 +80,7 @@ class MainSection extends Component {
   }
 }
 
-export default todoStream.observer(
+export default todoStream.reactObserver(
   (todos) => ({
     todos,
     completedCount: todos.reduce((count, todo) =>

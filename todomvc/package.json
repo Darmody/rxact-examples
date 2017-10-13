@@ -7,7 +7,7 @@
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-scripts": "1.0.13",
-    "rxact": "^0.7.1",
+    "rxact": "^0.8.4",
     "rxjs": "^5.4.3",
     "todomvc-app-css": "^2.1.0"
   },

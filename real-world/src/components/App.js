@@ -50,6 +50,6 @@ const mapStateToProps = (state, ownProps) => ({
   inputValue: ownProps.location.pathname.substring(ROOT_PATH.length)
 })
 
-export default withRouter(errorStream.observer(
+export default withRouter(errorStream.reactObserver(
   mapStateToProps
 )(App))

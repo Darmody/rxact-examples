@@ -33,6 +33,6 @@ Counter.propTypes = {
   value: PropTypes.number.isRequired,
 }
 
-export default counterStream.observer(
+export default counterStream.reactObserver(
   (state => ({ value: state })),
 )(Counter)

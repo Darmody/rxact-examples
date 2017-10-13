@@ -1,5 +1,5 @@
 import { Map, List } from 'immutable'
-import { createStateStream } from 'rxact'
+import { StateStream } from 'rxact'
 import { camelizeKeys } from 'humps'
 import paginationStream from './pagination'
 import { fetchUser, fetchStarred } from '../APIClient'
@@ -11,17 +11,20 @@ const initialState = Map({
   errorMessage: '',
 })
 
-const userStream = createStateStream('user', initialState)
-const createEvent = userStream.createEvent
-const emitState = userStream.emitState
+const userStream = new StateStream('user', initialState)
+const { eventRunner, next: emitState } = userStream
 
 userStream.isFetching = fetching => () => emitState(state => state.set('isFetching', fetching))
 
-userStream.cleanError = emitState(state => state.set('errorMessage', ''))
+userStream.cleanError = () => emitState(state => state.set('errorMessage', ''))
 
-const handleError = error => emitState(state =>
-  state.set('errorMessage', error.message || 'Something went wrong!')
-)
+const handleError = error => {
+  emitState(state =>
+    state.set('errorMessage', error.message || 'Something went wrong!')
+  )
+
+  console.error(error)
+}
 
 const updateProfile = profile => emitState(state =>
   state.update('profile', value => value.merge(profile))
@@ -35,25 +38,25 @@ userStream.resetStarredRepos = () => emitState(state =>
   state.set('starredRepos', [])
 )
 
-userStream.login = createEvent(event$ => event$
-  .pluck('payload')
-  .switchMap(fetchUser)
-  .pluck('response')
-  .map(camelizeKeys)
-  .map(updateProfile)
-  .catch(handleError)
+userStream.login = name => eventRunner(
+  event$ => event$
+    .switchMap(fetchUser)
+    .pluck('response')
+    .map(camelizeKeys)
+    .map(updateProfile)
+    .catch(handleError),
+  name,
 )
 
-userStream.fetchStarredRepos = createEvent(
+userStream.fetchStarredRepos = (name, page = 1) => eventRunner(
   event$ => event$
-    .pluck('payload')
     .switchMap(({ name, page }) => fetchStarred(name, page))
     .do(paginationStream.nextPage)
     .pluck('response')
     .map(camelizeKeys)
     .do(updateStarredRepos)
     .catch(handleError),
-  (name, page = 1) =>  ({ name, page }),
+  { name, page },
 )
 
 export default userStream

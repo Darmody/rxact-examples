@@ -52,7 +52,7 @@ class UserPage extends Component {
           isFetching={user.isFetching}
           items={user.starredRepos}
           onLoadMoreClick={this.handleLoadMoreClick}
-          loadingLabel={`Loading ${user.login}'s starred...`}
+          loadingLabel={`Loading ${user.profile.login}'s starred...`}
           {...pagination}
           />
       </div>
@@ -61,7 +61,7 @@ class UserPage extends Component {
 }
 
 export default withRouter(
-  userPageStream.observer(state => ({
+  userPageStream.reactObserver(state => ({
     ...state,
     user: state.user.toJS(),
     pagination: state.pagination.toJS(),

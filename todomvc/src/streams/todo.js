@@ -1,8 +1,7 @@
-import 'rxjs'
-import { createStateStream } from 'rxact'
+import { StateStream } from 'rxact'
 
-const todoStream = createStateStream('todos', [])
-const emitState = todoStream.emitState
+const todoStream = new StateStream('todos', [])
+const emitState = todoStream.next
 
 todoStream.add = text => emitState(state => [
   ...state,

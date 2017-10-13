@@ -1,6 +1,6 @@
 import Rx from 'rxjs'
 import { Map, List } from 'immutable'
-import { createStateStream } from 'rxact'
+import { StateStream } from 'rxact'
 import { camelizeKeys } from 'humps'
 import paginationStream from './pagination'
 import { fetchRepo, fetchStargazers } from '../APIClient'
@@ -12,16 +12,16 @@ const initialState = Map({
   errorMessage: '',
 })
 
-const repoStream = createStateStream('repo', initialState)
-const createEvent = repoStream.createEvent
-const emitState = repoStream.emitState
+const repoStream = new StateStream('repo', initialState)
+const { eventRunner, next: emitState } = repoStream
 
 repoStream.isFetching = fetching => () => emitState(state => state.set('isFetching', fetching))
 
-repoStream.cleanError = emitState(state => state.set('errorMessage', ''))
+repoStream.cleanError = () => emitState(state => state.set('errorMessage', ''))
 
 const handleError = (error) => {
   emitState(state => state.set('errorMessage', error.message || 'Something went wrong!'))
+  console.error(error)
 
   return Rx.Observable.empty()
 }
@@ -38,25 +38,25 @@ repoStream.resetStargazers = () => emitState(state =>
   state.set('stargazers', [])
 )
 
-repoStream.fetch = createEvent(event$ => event$
-  .pluck('payload')
+repoStream.fetch = (name) => eventRunner(
+  event$ => event$
   .switchMap(fetchRepo)
   .pluck('response')
   .map(camelizeKeys)
   .map(updateDetail)
-  .catch(handleError)
+  .catch(handleError),
+  name,
 )
 
-repoStream.fetchStargazers = createEvent(
+repoStream.fetchStargazers = (name, page = 1) => eventRunner(
   event$ => event$
-    .pluck('payload')
-    .switchMap(({ name, page }) => fetchStargazers(name, page))
-    .do(paginationStream.nextPage)
-    .pluck('response')
-    .map(camelizeKeys)
-    .do(updateStargazers)
-    .catch((error) => handleError(error)),
-  (name, page = 1) =>  ({ name, page }),
+  .switchMap(({ name, page }) => fetchStargazers(name, page))
+  .do(paginationStream.nextPage)
+  .pluck('response')
+  .map(camelizeKeys)
+  .do(updateStargazers)
+  .catch((error) => handleError(error)),
+  { name, page },
 )
 
 export default repoStream

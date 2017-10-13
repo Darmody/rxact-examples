@@ -1,13 +1,13 @@
 import { Map } from 'immutable'
-import { createStateStream } from 'rxact'
+import { StateStream } from 'rxact'
 
 const initialState = Map({
   pageCount: 0,
   hasNext: true,
 })
 
-const paginationStream = createStateStream('pagination', initialState)
-const { emitState } = paginationStream
+const paginationStream = new StateStream('pagination', initialState)
+const { next: emitState } = paginationStream
 
 paginationStream.nextPage = ajaxResponse => {
   const link = ajaxResponse.xhr.getResponseHeader('link') || ''

@@ -1,15 +1,17 @@
-import 'rxjs'
 import { ajax } from 'rxjs/observable/dom/ajax'
-import { createStateStream } from 'rxact'
+import { StateStream } from 'rxact'
 
-const postStream = createStateStream('posts', {
+const postStream = new StateStream('posts', {
   reddit: 'reactjs',
   items: {},
   isFetching: false,
   lastUpdated: null,
 })
-const createEvent = postStream.createEvent
-const emitState = postStream.emitState
+
+const {
+  next: emitState,
+  eventRunner,
+} = postStream
 
 const inFetching = (isFetching) => emitState(state => ({
   ...state,
@@ -43,9 +45,9 @@ const updatePosts = items => emitState(state => ({
   lastUpdated: Date.now(),
 }))
 
-postStream.fetchPosts = createEvent((event$) => event$
+postStream.fetchPosts = () => eventRunner(event$ => event$
   .do(() => inFetching(true))
-  .pluck('state', 'reddit')
+  .pluck('reddit')
   .switchMap(fetchPosts)
   .do((items) => {
     updatePosts(items)

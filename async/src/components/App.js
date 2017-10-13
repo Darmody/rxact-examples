@@ -56,7 +56,7 @@ class App extends Component {
   }
 }
 
-export default postStream.observer(state => ({
+export default postStream.reactObserver(state => ({
   selectedReddit: state.reddit,
   posts: state.items[state.reddit] || [],
   isFetching: state.isFetching,
