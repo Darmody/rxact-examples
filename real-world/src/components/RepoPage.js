@@ -52,7 +52,7 @@ class RepoPage extends Component {
 }
 
 export default withRouter(
-  repoPageStream.reactObserver((state, props) => {
+  repoPageStream.observer((state, props) => {
     const login = props.match.params.login.toLowerCase()
     const name = props.match.params.name.toLowerCase()
 

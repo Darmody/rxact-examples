@@ -61,7 +61,7 @@ class UserPage extends Component {
 }
 
 export default withRouter(
-  userPageStream.reactObserver(state => ({
+  userPageStream.observer(state => ({
     ...state,
     user: state.user.toJS(),
     pagination: state.pagination.toJS(),
