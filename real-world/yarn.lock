@@ -5633,15 +5633,15 @@ rx-lite@*, rx-lite@^4.0.8:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/rx-lite/-/rx-lite-4.0.8.tgz#0b1e11af8bc44836f04a6407e92da42467b79444"
 
-rxact-react@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/rxact-react/-/rxact-react-0.1.0.tgz#fc75506df42057b03943d04ec43bbeb5520d0227"
+rxact-react@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/rxact-react/-/rxact-react-0.2.0.tgz#eca19a7e1914d9cd3d671d4d252e94ad54e2d3ff"
   dependencies:
     hoist-non-react-statics "^2.3.1"
 
-rxact@^0.8.12:
-  version "0.8.12"
-  resolved "https://registry.yarnpkg.com/rxact/-/rxact-0.8.12.tgz#bb94437cc2d3d2bc5d211f975ee4035b68ecbdab"
+rxact@^0.9.2:
+  version "0.9.2"
+  resolved "https://registry.yarnpkg.com/rxact/-/rxact-0.9.2.tgz#a706adb3fb0309f30d4e66af90caa0eef314edc7"
   dependencies:
     symbol-observable "^1.0.4"
 

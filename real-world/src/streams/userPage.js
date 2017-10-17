@@ -14,6 +14,7 @@ const initialize = () => {
 userPageStream.loadData = name => eventRunner(
   event$ => event$
     .do(initialize)
+    .do(userStream.isFetching(true))
     .mergeMap(userStream.login)
     .mergeMap(() => userStream
       .fetchStarredRepos(name)

@@ -15,10 +15,10 @@ repoPageStream.loadData = (name) => eventRunner(
     .do(initialize)
     .do(repoStream.isFetching(true))
     .filter(event => !!event)
-    .do(name => repoStream.fetch(name)
-      .switchMap(() => repoStream.fetchStargazers(name))
+    .mergeMap(repoStream.fetch)
+    .mergeMap(() => repoStream
+      .fetchStargazers(name)
       .do(repoStream.isFetching(false))
-      .subscribe()
     ),
   name,
 )

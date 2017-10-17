@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import './setupObservable'
+import './setupRxact'
 import Counter from './components/Counter'
 
 ReactDOM.render(<Counter />, document.getElementById('root'))
