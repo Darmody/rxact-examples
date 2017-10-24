@@ -1892,6 +1892,10 @@ diff@^3.2.0:
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/diff/-/diff-3.3.1.tgz#aa8567a6eed03c531fc89d3f711cd0e5259dec75"
 
+diff@^3.4.0:
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/diff/-/diff-3.4.0.tgz#b1d85507daf3964828de54b37d0d73ba67dda56c"
+
 diffie-hellman@^5.0.0:
   version "5.0.2"
   resolved "https://registry.yarnpkg.com/diffie-hellman/-/diffie-hellman-5.0.2.tgz#b5835739270cfe26acf632099fded2a07f209e5e"
@@ -5633,15 +5637,27 @@ rx-lite@*, rx-lite@^4.0.8:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/rx-lite/-/rx-lite-4.0.8.tgz#0b1e11af8bc44836f04a6407e92da42467b79444"
 
-rxact-react@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/rxact-react/-/rxact-react-0.2.0.tgz#eca19a7e1914d9cd3d671d4d252e94ad54e2d3ff"
+rxact-debugger@^1.0.0-beta.0:
+  version "1.0.0-beta.0"
+  resolved "https://registry.yarnpkg.com/rxact-debugger/-/rxact-debugger-1.0.0-beta.0.tgz#448c2e0baf094865391143ea23e5b6a36bacbd0e"
+  dependencies:
+    diff "^3.4.0"
+
+rxact-react@^1.0.0-beta.0:
+  version "1.0.0-beta.0"
+  resolved "https://registry.yarnpkg.com/rxact-react/-/rxact-react-1.0.0-beta.0.tgz#11683b30533d2c443672e80f6b4ad5302fd9cd0e"
   dependencies:
     hoist-non-react-statics "^2.3.1"
 
-rxact@^0.9.2:
-  version "0.9.2"
-  resolved "https://registry.yarnpkg.com/rxact/-/rxact-0.9.2.tgz#a706adb3fb0309f30d4e66af90caa0eef314edc7"
+rxact-rxjs@^1.0.0-beta.1:
+  version "1.0.0-beta.1"
+  resolved "https://registry.yarnpkg.com/rxact-rxjs/-/rxact-rxjs-1.0.0-beta.1.tgz#409e6a5eebf1f147a229770fea51e8ffdb0c3908"
+  dependencies:
+    diff "^3.4.0"
+
+rxact@^1.0.0-beta.0:
+  version "1.0.0-beta.0"
+  resolved "https://registry.yarnpkg.com/rxact/-/rxact-1.0.0-beta.0.tgz#973979e36bf2786a94fd9d31e90afbf14062ef26"
   dependencies:
     symbol-observable "^1.0.4"
 

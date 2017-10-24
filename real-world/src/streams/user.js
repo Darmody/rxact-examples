@@ -12,51 +12,55 @@ const initialState = Map({
 })
 
 const userStream = new StateStream('user', initialState)
-const { eventRunner, next: emitState } = userStream
 
-userStream.isFetching = fetching => () => emitState(state => state.set('isFetching', fetching))
+userStream.emitter('isFetching', fetching => state =>
+  state.set('isFetching', fetching)
+)
 
-userStream.cleanError = () => emitState(state => state.set('errorMessage', ''))
+userStream.emitter('cleanError', () => state =>
+  state.set('errorMessage', '')
+)
 
-const handleError = error => {
-  emitState(state =>
-    state.set('errorMessage', error.message || 'Something went wrong!')
-  )
-
+userStream.emitter('handleError', (error) => {
   console.error(error)
-}
 
-const updateProfile = profile => emitState(state =>
+  return (state) => {
+    return state.set(
+      'errorMessage', error.message || 'Something went wrong!'
+    )
+  }
+})
+
+userStream.emitter('updateProfile', profile => state =>
   state.update('profile', value => value.merge(profile))
 )
 
-const updateStarredRepos = repos => emitState(state =>
+userStream.emitter('updateStarredRepos', repos => state =>
   state.update('starredRepos', value => value.concat(repos))
 )
 
-userStream.resetStarredRepos = () => emitState(state =>
+userStream.emitter('resetStarredRepos', () => state =>
   state.set('starredRepos', [])
 )
 
-userStream.login = name => eventRunner(
-  event$ => event$
-    .switchMap(fetchUser)
-    .pluck('response')
-    .map(camelizeKeys)
-    .map(updateProfile)
-    .catch(handleError),
+userStream.login = name => userStream.eventRunner(name$ => name$
+  .switchMap(fetchUser)
+  .pluck('response')
+  .map(camelizeKeys)
+  .map(userStream.updateProfile)
+  .catch(userStream.handleError),
   name,
 )
 
-userStream.fetchStarredRepos = (name, page = 1) => eventRunner(
-  event$ => event$
+userStream.fetchStarredRepos = (name, page = 1) => userStream.eventRunner(
+  name$ => name$
     .switchMap(({ name, page }) => fetchStarred(name, page))
     .do(paginationStream.nextPage)
     .pluck('response')
     .map(camelizeKeys)
-    .do(updateStarredRepos)
-    .catch(handleError),
-  { name, page },
+    .do(userStream.updateStarredRepos)
+    .catch(userStream.handleError),
+  ({ name, page })
 )
 
 export default userStream

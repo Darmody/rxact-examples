@@ -3,23 +3,21 @@ import repoStream from './repo'
 import paginationStream from './pagination'
 
 const repoPageStream = new StateStream('repoPage', {}, [repoStream, paginationStream])
-const { eventRunner } = repoPageStream
 
 const initialize = () => {
   paginationStream.cleanPage()
   repoStream.resetStargazers()
 }
 
-repoPageStream.loadData = (name) => eventRunner(
-  event$ => event$
-    .do(initialize)
-    .do(repoStream.isFetching(true))
-    .filter(event => !!event)
-    .mergeMap(repoStream.fetch)
-    .mergeMap(() => repoStream
-      .fetchStargazers(name)
-      .do(repoStream.isFetching(false))
-    ),
+repoPageStream.loadData = name => repoPageStream.eventRunner(name$ => name$
+  .do(initialize)
+  .repo$isFetching(true)
+  .filter(name => !!name)
+  .repo$fetch()
+  .mergeAll()
+  .repo$fetchStargazers(name)
+  .mergeAll()
+  .repo$isFetching(false),
   name,
 )
 

@@ -1,4 +1,3 @@
-import Rx from 'rxjs'
 import { Map, List } from 'immutable'
 import { StateStream } from 'rxact'
 import { camelizeKeys } from 'humps'
@@ -13,50 +12,51 @@ const initialState = Map({
 })
 
 const repoStream = new StateStream('repo', initialState)
-const { eventRunner, next: emitState } = repoStream
+const { eventRunner } = repoStream
 
-repoStream.isFetching = fetching => () => emitState(state => state.set('isFetching', fetching))
+repoStream.emitter('isFetching', fetching => state => state.set('isFetching', fetching))
 
-repoStream.cleanError = () => emitState(state => state.set('errorMessage', ''))
+repoStream.emitter('cleanError', () => state => state.set('errorMessage', ''))
 
-const handleError = (error) => {
-  emitState(state => state.set('errorMessage', error.message || 'Something went wrong!'))
-  console.error(error)
+repoStream.emitter('updateError', error => state =>
+  state.set('errorMessage', error.message || 'Something went wrong!')
+)
 
-  return Rx.Observable.empty()
-}
-
-const updateDetail = detail => emitState(state =>
+repoStream.emitter('updateDetail', detail => state =>
   state.update('detail', value => value.merge(detail))
 )
 
-const updateStargazers = repos => emitState(state =>
+repoStream.emitter('updateStargazers', repos => state =>
   state.update('stargazers', value => value.concat(repos))
 )
 
-repoStream.resetStargazers = () => emitState(state =>
+repoStream.emitter('resetStargazers', () => state =>
   state.set('stargazers', [])
 )
 
-repoStream.fetch = (name) => eventRunner(
-  event$ => event$
+repoStream.handleError = error => eventRunner(error$ => error$
+  .do(error => console.error(error))
+  .do(repoStream.updateError),
+  error,
+)
+
+repoStream.fetch = name => eventRunner(name$ => name$
   .switchMap(fetchRepo)
   .pluck('response')
   .map(camelizeKeys)
-  .map(updateDetail)
-  .catch(handleError),
+  .map(repoStream.updateDetail)
+  .catch(repoStream.handleError),
   name,
 )
 
-repoStream.fetchStargazers = (name, page = 1) => eventRunner(
-  event$ => event$
+repoStream.fetchStargazers = (name, page = 1) => eventRunner(event$ => event$
   .switchMap(({ name, page }) => fetchStargazers(name, page))
   .do(paginationStream.nextPage)
   .pluck('response')
   .map(camelizeKeys)
-  .do(updateStargazers)
-  .catch((error) => handleError(error)),
-  { name, page },
+  .do(repoStream.updateStargazers)
+  .catch((error) => repoStream.handleError(error)),
+  { name, page }
 )
 
 export default repoStream

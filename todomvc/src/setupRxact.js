@@ -4,5 +4,5 @@ import { setup } from 'rxact'
 
 setup({
   Observable: Rx.Observable,
-  plugins: [reactObserver],
+  plugins: [reactObserver()],
 })

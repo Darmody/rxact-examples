@@ -7,7 +7,6 @@ const initialState = Map({
 })
 
 const paginationStream = new StateStream('pagination', initialState)
-const { next: emitState } = paginationStream
 
 paginationStream.nextPage = ajaxResponse => {
   const link = ajaxResponse.xhr.getResponseHeader('link') || ''
@@ -23,13 +22,13 @@ paginationStream.nextPage = ajaxResponse => {
     hasNext = false
   }
 
-  emitState(state => state
+  paginationStream.next(state => state
     .update('pageCount', value => value + 1)
     .set('hasNext', hasNext)
   )
 }
 
-paginationStream.cleanPage = () => emitState(state => state
+paginationStream.cleanPage = () => paginationStream.next(state => state
   .merge({ pageCount: 0, hasNext: true })
 )
 
